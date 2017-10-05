@@ -7,7 +7,9 @@
 //
 
 #import "ViewController.h"
+#import "UIImage+WebP.h"
 #import "UIImage+GIF.h"
+#import "UIImageView+WebCache.h"
 
 @interface ViewController ()
 @property (weak, nonatomic) IBOutlet UIWebView *myWebView;
@@ -31,7 +33,8 @@
 #pragma mark - 使用UIWebView
 - (void)loadGifWithWebView
 {
-    NSString *path = [[NSBundle mainBundle] pathForResource:@"gif01" ofType:@"gif"];
+//    NSString *path = [[NSBundle mainBundle] pathForResource:@"gif01" ofType:@"gif"];
+    NSString *path = [[NSBundle mainBundle] pathForResource:@"douyin" ofType:@"webp"];
     
     /*
      NSData *data = [NSData dataWithContentsOfFile:path];
@@ -52,7 +55,7 @@
     
     NSMutableArray *imagesArr = [NSMutableArray array];
     for (NSString *name in arrays) {
-        UIImage *image = [UIImage imageNamed:[(@"gif02.bundle") stringByAppendingPathComponent:name]];
+        UIImage *image = [UIImage imageNamed:[@"gif02.bundle" stringByAppendingPathComponent:name]];
         if (image) {
             [imagesArr addObject:image];
         }
@@ -70,8 +73,31 @@
 
 
 #pragma mark - SDWebImage内部解析gif数据
+
+
+- (void) loadGifWithImageView_fromNetwork
+{
+//    NSString *path = [[NSBundle mainBundle] pathForResource:@"gif03" ofType:@"gif"];
+//    NSData *data = [NSData dataWithContentsOfFile:path];
+//    UIImage *image = [UIImage sd_animatedGIFWithData:data];
+    
+    NSURL *url = [NSURL URLWithString:@"https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1507197857694&di=a13bcb89c2522fd16e6a13362d22e95b&imgtype=0&src=http%3A%2F%2Fs15.sinaimg.cn%2Fmw690%2F0062ywFUgy6Y2pBSx1sde%26690"];
+    [self.myImgView02 sd_setImageWithURL:url];
+}
+
+- (void) loadWebpFromLocal
+{
+    NSString *path = [[NSBundle mainBundle] pathForResource:@"douyin" ofType:@"webp"];
+    NSData *data = [NSData dataWithContentsOfFile:path];
+    UIImage *image = [UIImage sd_imageWithWebPData:data];
+    self.myImgView02.image = image;
+}
+
 - (void)loadGifWithImageView
 {
+    return [self loadWebpFromLocal];
+    return [self loadGifWithImageView_fromNetwork];
+    
     NSString *path = [[NSBundle mainBundle] pathForResource:@"gif03" ofType:@"gif"];
     NSData *data = [NSData dataWithContentsOfFile:path];
     UIImage *image = [UIImage sd_animatedGIFWithData:data];
